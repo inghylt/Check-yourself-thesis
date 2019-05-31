@@ -1,0 +1,982 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<!--
+		Color mapping
+		Result enumeration
+	Class       |t|f|u|e|na|ne|
+	compliance  |G|R|B|Y|- |- |
+	inventory   |-|-|B|Y|- |- |
+	misc        |-|-|B|Y|- |- |
+	patch       |R|G|B|Y|- |- |
+	vuln        |R|G|B|Y|- |- |
+
+	R = red
+	G = green
+	B = blue
+	Y = yellow
+	- = grey
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <title>OVAL Results</title>
+    <style type="text/css">
+            table { border: 1px solid #000000; width: 100%; border-spacing: 0px; margin: 2px 0px;}
+            .noborder {border: none;}
+            .nomargin {margin: 0px;}
+            td { padding: 0px 4px 1px 4px;}
+            .SmallLabel { font-family: Geneva, Arial, Helvetica, sans-serif; color: #000000; font-size: 9pt; font-weight: bold; white-space: nowrap;}
+            .SmallText { font-family: Geneva, Arial, Helvetica, sans-serif; color: #000000; font-size: 9pt;}
+            .Label { font-family: Geneva, Arial, Helvetica, sans-serif; color: #000000; font-size: 10pt; font-weight: bold; white-space: nowrap;}
+            .TitleLabel { font-family: Geneva, Arial, Helvetica, sans-serif; color: #ffffff; font-size: 10pt; font-weight: bold; white-space: nowrap;}
+            .Text { font-family: Geneva, Arial, Helvetica, sans-serif; color: #000000; font-size: 10pt;}
+            .Title { color: #FFFFFF; background-color: #706c60; padding: 0px 4px 1px 4px; font-size: 10pt; border-bottom: 1px solid #000000;}
+            .Center { text-align: center;}
+
+            a { color:#676c63;}
+            a.Hover:hover { color:#7b0e0e; text-decoration:underline;}
+
+            .LightRow { background-color: #FFFFFF;}
+            .DarkRow { background-color: #DDDDD8;}
+
+            .resultbadA{background-color: #FFBC8F;}
+            .resultbadB{background-color: #FFE0CC;}
+            .resultgoodA{background-color: #ACD685;}
+            .resultgoodB{background-color: #CBE6B3;}
+            .unknownA{background-color: #AEC8E0;}
+            .unknownB{background-color: #DAE6F1;}
+            .errorA{background-color: #FFDD75;}
+            .errorB{background-color: #FFECB3;}
+            .otherA{background-color: #EEEEEE;}
+            .otherB{background-color: #FFFFFF;}
+
+            .Classcompliance{background-color: #93C572;}
+            .Classinventory{background-color: #AEC6CF;}
+            .Classmiscellaneous{background-color: #9966CC;}
+            .Classpatch{background-color: #FFDD75;}
+            .Classvulnerability{background-color: #FF9966;}
+            .ColorBox{width: 2px;}
+		</style>
+  </head>
+  <body>
+    <table class="noborder nomargin">
+      <tr>
+        <td width="50%">
+          <table border="1">
+            <tr class="Title">
+              <td class="TitleLabel" colspan="5">OVAL Results Generator Information</td>
+            </tr>
+            <tr class="DarkRow Center">
+              <td class="SmallLabel">Schema Version</td>
+              <td class="SmallLabel">Product Name</td>
+              <td class="SmallLabel">Product Version</td>
+              <td class="SmallLabel">Date</td>
+              <td class="SmallLabel">Time</td>
+            </tr>
+            <tr class="LightRow">
+              <td class="SmallText">5.11.2</td>
+              <td class="SmallText">cpe:/a:open-scap:oscap</td>
+              <td class="SmallText">1.3.1</td>
+              <td class="SmallText">2019-03-27</td>
+              <td class="SmallText">08:20:39</td>
+            </tr>
+            <tr class="DarkRow Center">
+              <td class="SmallLabel" style="width: 20%;" title="Non-Compliant/Vulnerable/Unpatched">#✕</td>
+              <td class="SmallLabel" style="width: 20%;" title="Compliant/Non-Vulnerable/Patched">#✓</td>
+              <td class="SmallLabel" style="width: 20%;" title="Error">#Error</td>
+              <td class="SmallLabel" style="width: 20%;" title="Unknown">#Unknown</td>
+              <td class="SmallLabel" style="width: 20%;" title="Inventory/Miscellaneous class, or Not Applicable/Not Evaluated result">#Other</td>
+            </tr>
+            <tr class="LightRow Center" style="height:auto;">
+              <td class="SmallText resultbadB" title="Non-Compliant/Vulnerable/Unpatched" style="width:20%">0</td>
+              <td class="SmallText resultgoodB" title="Compliant/Non-Vulnerable/Patched" style="width:20%">53</td>
+              <td class="SmallText errorB" title="Error" style="width:20%">0</td>
+              <td class="SmallText unknownB" title="Unknown" style="width:20%">0</td>
+              <td class="SmallText otherB" title="Inventory/Miscellaneous class, or Not Applicable/Not Evaluated result" style="width:20%">27</td>
+            </tr>
+          </table>
+        </td>
+        <td width="50%">
+          <table border="1">
+            <tr class="Title">
+              <td class="TitleLabel" colspan="5">OVAL Definition Generator Information</td>
+            </tr>
+            <tr class="DarkRow Center">
+              <td class="SmallLabel">Schema Version</td>
+              <td class="SmallLabel">Product Name</td>
+              <td class="SmallLabel">Product Version</td>
+              <td class="SmallLabel">Date</td>
+              <td class="SmallLabel">Time</td>
+            </tr>
+            <tr class="LightRow">
+              <td class="SmallText">5.11.2</td>
+              <td class="SmallText">CIS OVAL Repository</td>
+              <td class="SmallText">0.1</td>
+              <td class="SmallText">2019-03-26</td>
+              <td class="SmallText">15:48:14</td>
+            </tr>
+            <tr class="DarkRow Center">
+              <td class="SmallLabel" style="width: 20%;">#Definitions</td>
+              <td class="SmallLabel" style="width: 20%;">#Tests</td>
+              <td class="SmallLabel" style="width: 20%;">#Objects</td>
+              <td class="SmallLabel" style="width: 20%;">#States</td>
+              <td class="SmallLabel" style="width: 20%;">#Variables</td>
+            </tr>
+            <tr class="LightRow Center">
+              <td class="SmallText Center">80 Total<br /><table class="noborder"><tr class="Center"><td class="SmallText Classcompliance" title="compliance" style="width:20%">0</td><td class="SmallText Classinventory" title="inventory" style="width:20%">27</td><td class="SmallText Classmiscellaneous" title="miscellaneous" style="width:20%">0</td><td class="SmallText Classpatch" title="patch" style="width:20%">53</td><td class="SmallText Classvulnerability" title="vulnerability" style="width:20%">0</td></tr></table></td>
+              <td class="SmallText Center">785</td>
+              <td class="SmallText Center">46</td>
+              <td class="SmallText Center">174</td>
+              <td class="SmallText Center">0</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+    <hr />
+    <a class="Hover" name="a_1" id="a_1" style="text-decoration:none;"></a>
+    <table border="1">
+      <tr class="Title">
+        <td class="TitleLabel" colspan="2">System Information</td>
+      </tr>
+      <tr class="DarkRow">
+        <td class="Label" width="20%">Host Name</td>
+        <td class="Text" width="80%">2595496347d3</td>
+      </tr>
+      <tr class="LightRow">
+        <td class="Label" width="20%">Operating System</td>
+        <td class="Text" width="80%">Linux</td>
+      </tr>
+      <tr class="DarkRow">
+        <td class="Label" width="20%">Operating System Version</td>
+        <td class="Text" width="80%">#1 SMP Fri Sep 7 08:20:28 UTC 2018</td>
+      </tr>
+      <tr class="LightRow">
+        <td class="Label" width="20%">Architecture</td>
+        <td class="Text" width="80%">x86_64</td>
+      </tr>
+      <tr class="DarkRow">
+        <td class="Label" width="20%">Interfaces</td>
+        <td width="80%">
+          <table border="1">
+            <tr class="LightRow">
+              <td class="Label" width="20%">Interface Name</td>
+              <td class="Text" width="80%">lo</td>
+            </tr>
+            <tr class="LightRow">
+              <td class="Label" width="20%">IP Address</td>
+              <td class="Text" width="80%">127.0.0.1</td>
+            </tr>
+            <tr class="LightRow">
+              <td class="Label" width="20%">MAC Address</td>
+              <td class="Text" width="80%">00:00:00:00:00:00</td>
+            </tr>
+          </table>
+          <table border="1">
+            <tr class="DarkRow">
+              <td class="Label" width="20%">Interface Name</td>
+              <td class="Text" width="80%">eth0</td>
+            </tr>
+            <tr class="DarkRow">
+              <td class="Label" width="20%">IP Address</td>
+              <td class="Text" width="80%">172.17.0.3</td>
+            </tr>
+            <tr class="DarkRow">
+              <td class="Label" width="20%">MAC Address</td>
+              <td class="Text" width="80%">02:42:AC:11:00:03</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+    <table border="1">
+      <tr class="Title">
+        <td class="TitleLabel" colspan="5">OVAL System Characteristics Generator Information</td>
+      </tr>
+      <tr class="DarkRow Center">
+        <td class="SmallLabel">Schema Version</td>
+        <td class="SmallLabel">Product Name</td>
+        <td class="SmallLabel">Product Version</td>
+        <td class="SmallLabel">Date</td>
+        <td class="SmallLabel">Time</td>
+      </tr>
+      <tr class="LightRow">
+        <td class="SmallText">5.11.2</td>
+        <td class="SmallText">cpe:/a:open-scap:oscap</td>
+        <td class="SmallText">0.1</td>
+        <td class="SmallText">2019-03-27</td>
+        <td class="SmallText">08:20:39</td>
+      </tr>
+    </table>
+    <table border="1">
+      <tr class="Title">
+        <td class="TitleLabel" colspan="5">OVAL Definition Results</td>
+      </tr>
+      <tr class="DarkRow">
+        <td colspan="5">
+          <table class="noborder nomargin" style="width:auto;">
+            <tr>
+              <td>
+                <table border="1">
+                  <tr class="LightRow">
+                    <td class="resultbadA ColorBox"></td>
+                    <td class="resultbadB ColorBox"></td>
+                    <td class="Text" title="Non-Compliant/Vulnerable/Unpatched">✕</td>
+                  </tr>
+                </table>
+              </td>
+              <td>
+                <table border="1">
+                  <tr class="LightRow">
+                    <td class="resultgoodA ColorBox"></td>
+                    <td class="resultgoodB ColorBox"></td>
+                    <td class="Text" title="Compliant/Non-Vulnerable/Patched">✓</td>
+                  </tr>
+                </table>
+              </td>
+              <td>
+                <table border="1">
+                  <tr class="LightRow">
+                    <td class="errorA ColorBox"></td>
+                    <td class="errorB ColorBox"></td>
+                    <td class="Text">Error</td>
+                  </tr>
+                </table>
+              </td>
+              <td>
+                <table border="1">
+                  <tr class="LightRow">
+                    <td class="unknownA ColorBox"></td>
+                    <td class="unknownB ColorBox"></td>
+                    <td class="Text">Unknown</td>
+                  </tr>
+                </table>
+              </td>
+              <td>
+                <table border="1">
+                  <tr class="LightRow">
+                    <td class="DarkRow ColorBox"></td>
+                    <td class="LightRow ColorBox"></td>
+                    <td class="Text" title="Inventory/Miscellaneous class, or Not Applicable/Not Evaluated result">Other</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr class="TitleLabel">
+        <td class="Title" align="center">ID</td>
+        <td class="Title" align="center">Result</td>
+        <td class="Title" align="center">Class</td>
+        <td class="Title" align="center">Reference ID</td>
+        <td class="Title" align="center">Title</td>
+      </tr>
+      <tr class="otherA">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:6513">oval:org.mitre.oval:def:6513</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">inventory</td>
+        <td class="Text" align="center">[cpe:/o:debian:debian_gnu/linux:5.0]</td>
+        <td class="Text">Debian GNU/Linux 5.0 is installed</td>
+      </tr>
+      <tr class="otherB">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:6461">oval:org.mitre.oval:def:6461</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">inventory</td>
+        <td class="Text" align="center">[cpe:/o:debian:debian_gnu/linux:4.0]</td>
+        <td class="Text">Debian GNU/Linux 4.0 is installed.</td>
+      </tr>
+      <tr class="otherA">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:28919">oval:org.mitre.oval:def:28919</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">inventory</td>
+        <td class="Text" align="center">[cpe:/o:debian:debian:8]</td>
+        <td class="Text">Debian 8 is installed</td>
+      </tr>
+      <tr class="otherB">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:28211">oval:org.mitre.oval:def:28211</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">inventory</td>
+        <td class="Text" align="center">[cpe:/o:novell:suse_linux:12::server]</td>
+        <td class="Text">SUSE Linux Enterprise Server 12 is installed</td>
+      </tr>
+      <tr class="otherA">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:24894">oval:org.mitre.oval:def:24894</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">inventory</td>
+        <td class="Text" align="center">[cpe:/o:debian:debian_gnu/linux]</td>
+        <td class="Text">Debian GNU/Linux is installed</td>
+      </tr>
+      <tr class="otherB">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:24698">oval:org.mitre.oval:def:24698</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">inventory</td>
+        <td class="Text" align="center">[cpe:/o:debian:debian_gnu/kfreebsd]</td>
+        <td class="Text">Debian GNU/kFreeBSD is installed</td>
+      </tr>
+      <tr class="otherA">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:24421">oval:org.mitre.oval:def:24421</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">inventory</td>
+        <td class="Text" align="center">[cpe:/o:canonical:ubuntu_linux:14.04]</td>
+        <td class="Text">Ubuntu 14.04 is installed</td>
+      </tr>
+      <tr class="otherB">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:19338">oval:org.mitre.oval:def:19338</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">inventory</td>
+        <td class="Text" align="center">[cpe:/o:debian:debian:7]</td>
+        <td class="Text">Debian 7 is installed</td>
+      </tr>
+      <tr class="otherA">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:19244">oval:org.mitre.oval:def:19244</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">inventory</td>
+        <td class="Text" align="center">[cpe:/o:canonical:ubuntu_linux:13.10]</td>
+        <td class="Text">Ubuntu 13.10 is installed</td>
+      </tr>
+      <tr class="otherB">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:17290">oval:org.mitre.oval:def:17290</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">inventory</td>
+        <td class="Text" align="center">[cpe:/o:ubuntu:ubuntu_linux:7.04]</td>
+        <td class="Text">Ubuntu 7.04 is installed</td>
+      </tr>
+      <tr class="otherA">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:17270">oval:org.mitre.oval:def:17270</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">inventory</td>
+        <td class="Text" align="center">[cpe:/o:novell:suse_linux:11::server]</td>
+        <td class="Text">SUSE Linux Enterprise Server 11.x is installed</td>
+      </tr>
+      <tr class="otherB">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:17043">oval:org.mitre.oval:def:17043</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">inventory</td>
+        <td class="Text" align="center">[cpe:/o:ubuntu:ubuntu_linux:6.10]</td>
+        <td class="Text">Ubuntu 6.10 is installed</td>
+      </tr>
+      <tr class="otherA">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:16418">oval:org.mitre.oval:def:16418</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">inventory</td>
+        <td class="Text" align="center">[cpe:/o:canonical:ubuntu_linux:12.10]</td>
+        <td class="Text">Ubuntu 12.10 is installed</td>
+      </tr>
+      <tr class="otherB">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:16014">oval:org.mitre.oval:def:16014</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">inventory</td>
+        <td class="Text" align="center">[cpe:/o:canonical:ubuntu_linux:13.04]</td>
+        <td class="Text">Ubuntu 13.04 is installed</td>
+      </tr>
+      <tr class="otherA">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:15824">oval:org.mitre.oval:def:15824</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">inventory</td>
+        <td class="Text" align="center">[cpe:/o:canonical:ubuntu_linux:12.04]</td>
+        <td class="Text">Ubuntu 12.04 is installed</td>
+      </tr>
+      <tr class="otherB">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:14657">oval:org.mitre.oval:def:14657</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">inventory</td>
+        <td class="Text" align="center">[cpe:/o:canonical:ubuntu_linux:11.10]</td>
+        <td class="Text">Ubuntu 11.10 is installed</td>
+      </tr>
+      <tr class="otherA">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:1368">oval:org.mitre.oval:def:1368</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">inventory</td>
+        <td class="Text" align="center">[cpe:/o:novell:suse_linux:10::server]</td>
+        <td class="Text">SUSE Linux Enterprise Server 10 is installed</td>
+      </tr>
+      <tr class="otherB">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:13354">oval:org.mitre.oval:def:13354</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">inventory</td>
+        <td class="Text" align="center">[cpe:/o:ubuntu:ubuntu_linux:7.10]</td>
+        <td class="Text">Ubuntu 7.10 is installed</td>
+      </tr>
+      <tr class="otherA">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:13319">oval:org.mitre.oval:def:13319</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">inventory</td>
+        <td class="Text" align="center">[cpe:/o:ubuntu:ubuntu_linux:6.06]</td>
+        <td class="Text">Ubuntu 6.06 is installed</td>
+      </tr>
+      <tr class="otherB">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:13306">oval:org.mitre.oval:def:13306</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">inventory</td>
+        <td class="Text" align="center">[cpe:/o:ubuntu:ubuntu_linux:8.10]</td>
+        <td class="Text">Ubuntu 8.10 is installed</td>
+      </tr>
+      <tr class="otherA">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:13250">oval:org.mitre.oval:def:13250</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">inventory</td>
+        <td class="Text" align="center">[cpe:/o:ubuntu:ubuntu_linux:8.04]</td>
+        <td class="Text">Ubuntu 8.04 is installed</td>
+      </tr>
+      <tr class="otherB">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:13134">oval:org.mitre.oval:def:13134</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">inventory</td>
+        <td class="Text" align="center">[cpe:/o:ubuntu:ubuntu_linux:10.10]</td>
+        <td class="Text">Ubuntu 10.10 is installed</td>
+      </tr>
+      <tr class="otherA">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:13089">oval:org.mitre.oval:def:13089</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">inventory</td>
+        <td class="Text" align="center">[cpe:/o:canonical:ubuntu_linux:10.04]</td>
+        <td class="Text">Ubuntu 10.04 is installed</td>
+      </tr>
+      <tr class="otherB">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:13079">oval:org.mitre.oval:def:13079</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">inventory</td>
+        <td class="Text" align="center">[cpe:/o:canonical:ubuntu_linux:9.10]</td>
+        <td class="Text">Ubuntu 9.10 is installed</td>
+      </tr>
+      <tr class="otherA">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:12959">oval:org.mitre.oval:def:12959</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">inventory</td>
+        <td class="Text" align="center">[cpe:/o:debian:debian:6.0]</td>
+        <td class="Text">Debian 6.0 is installed</td>
+      </tr>
+      <tr class="otherB">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:12669">oval:org.mitre.oval:def:12669</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">inventory</td>
+        <td class="Text" align="center">[cpe:/o:canonical:ubuntu_linux:9.04]</td>
+        <td class="Text">Ubuntu 9.04 is installed</td>
+      </tr>
+      <tr class="otherA">
+        <td class="Text" align="center">oval:org.cisecurity:def:2515</td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">inventory</td>
+        <td class="Text" align="center">[cpe:/o:debian:debian:9]</td>
+        <td class="Text">Debian 9 is installed</td>
+      </tr>
+      <tr class="resultgoodA">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:8201">oval:org.mitre.oval:def:8201</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="http://www.debian.org/security/2009/dsa-1934">DSA-1934</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2009-3094">CVE-2009-3094</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2009-3095">CVE-2009-3095</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2009-3555">CVE-2009-3555</a>]</td>
+        <td class="Text">DSA-1934 apache2 -- multiple issues</td>
+      </tr>
+      <tr class="resultgoodB">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:7600">oval:org.mitre.oval:def:7600</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="http://www.debian.org/security/2009/dsa-1834">DSA-1834</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2009-1890">CVE-2009-1890</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2009-1891">CVE-2009-1891</a>]</td>
+        <td class="Text">DSA-1834 apache2 -- denial of service</td>
+      </tr>
+      <tr class="resultgoodA">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:7270">oval:org.mitre.oval:def:7270</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="http://www.debian.org/security/2009/dsa-1816">DSA-1816</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2009-1195">CVE-2009-1195</a>]</td>
+        <td class="Text">DSA-1816 apache2 -- insufficient security check</td>
+      </tr>
+      <tr class="resultgoodB">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:7161">oval:org.mitre.oval:def:7161</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="http://www.debian.org/security/2010/dsa-2035">DSA-2035</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2010-0408">CVE-2010-0408</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2010-0434">CVE-2010-0434</a>]</td>
+        <td class="Text">DSA-2035 apache2 -- multiple issues</td>
+      </tr>
+      <tr class="resultgoodA">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:28696">oval:org.mitre.oval:def:28696</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="https://www.suse.com/support/update/announcement/2015/suse-su-20150974-1.html">SUSE-SU-2015:0974-1</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2013-5704">CVE-2013-5704</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-3581">CVE-2014-3581</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-8109">CVE-2014-8109</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2015-0228">CVE-2015-0228</a>]</td>
+        <td class="Text">SUSE-SU-2015:0974-1 -- Security update for apache2 (moderate)</td>
+      </tr>
+      <tr class="resultgoodB">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:27167">oval:org.mitre.oval:def:27167</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="https://www.suse.com/support/update/announcement/2014/suse-ru-20141311-1.html">SUSE-RU-2014:1311-1</a>]</td>
+        <td class="Text">SUSE-RU-2014:1311-1 -- Recommended update for apache2</td>
+      </tr>
+      <tr class="resultgoodA">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:26845">oval:org.mitre.oval:def:26845</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="https://www.suse.com/support/update/announcement/2014/suse-su-20141081-1.html">SUSE-SU-2014:1081-1</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-0231">CVE-2014-0231</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-0226">CVE-2014-0226</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2013-6438">CVE-2013-6438</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-0098">CVE-2014-0098</a>]</td>
+        <td class="Text">SUSE-SU-2014:1081-1 -- Security update for apache2</td>
+      </tr>
+      <tr class="resultgoodB">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:26836">oval:org.mitre.oval:def:26836</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="https://www.suse.com/support/update/announcement/2014/suse-su-20141082-1.html">SUSE-SU-2014:1082-1</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-0098">CVE-2014-0098</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2013-6438">CVE-2013-6438</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-0231">CVE-2014-0231</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-0226">CVE-2014-0226</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2013-1862">CVE-2013-1862</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2013-1896">CVE-2013-1896</a>]</td>
+        <td class="Text">SUSE-SU-2014:1082-1 -- Security update for apache2</td>
+      </tr>
+      <tr class="resultgoodA">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:26498">oval:org.mitre.oval:def:26498</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="https://www.suse.com/support/update/announcement/2014/suse-su-20141080-1.html">SUSE-SU-2014:1080-1</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-0231">CVE-2014-0231</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-0226">CVE-2014-0226</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2013-6438">CVE-2013-6438</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-0098">CVE-2014-0098</a>]</td>
+        <td class="Text">SUSE-SU-2014:1080-1 -- Security update for apache2</td>
+      </tr>
+      <tr class="resultgoodB">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:26266">oval:org.mitre.oval:def:26266</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="https://www.suse.com/support/update/announcement/2013/suse-su-20130387-1.html">SUSE-SU-2013:0387-1</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2012-0883">CVE-2012-0883</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2012-2687">CVE-2012-2687</a>]</td>
+        <td class="Text">SUSE-SU-2013:0387-1 -- Security update for apache2</td>
+      </tr>
+      <tr class="resultgoodA">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:26259">oval:org.mitre.oval:def:26259</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="http://www.debian.org/security/dsa-2989-1">DSA-2989-1</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-0118">CVE-2014-0118</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-0226">CVE-2014-0226</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-0231">CVE-2014-0231</a>]</td>
+        <td class="Text">DSA-2989-1 -- apache2 - security update</td>
+      </tr>
+      <tr class="resultgoodB">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:26047">oval:org.mitre.oval:def:26047</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="https://www.suse.com/support/update/announcement/2013/suse-su-20130469-1.html">SUSE-SU-2013:0469-1</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2012-4557">CVE-2012-4557</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2012-0883">CVE-2012-0883</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2012-2687">CVE-2012-2687</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2012-0031">CVE-2012-0031</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2012-0053">CVE-2012-0053</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2007-6750">CVE-2007-6750</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2011-3639">CVE-2011-3639</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2011-3368">CVE-2011-3368</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2011-4317">CVE-2011-4317</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2011-1473">CVE-2011-1473</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2011-3607">CVE-2011-3607</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2012-0021">CVE-2012-0021</a>]</td>
+        <td class="Text">SUSE-SU-2013:0469-1 -- Security update for apache2</td>
+      </tr>
+      <tr class="resultgoodA">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:25884">oval:org.mitre.oval:def:25884</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="http://www.ubuntu.com/usn/usn-2299-1/">USN-2299-1</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-0117">CVE-2014-0117</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-0118">CVE-2014-0118</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-0226">CVE-2014-0226</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-0231">CVE-2014-0231</a>]</td>
+        <td class="Text">USN-2299-1 -- apache2 vulnerabilities</td>
+      </tr>
+      <tr class="resultgoodB">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:25551">oval:org.mitre.oval:def:25551</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="https://www.suse.com/support/update/announcement/2013/suse-su-20131381-1.html">SUSE-SU-2013:1381-1</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2013-1896">CVE-2013-1896</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2013-1862">CVE-2013-1862</a>]</td>
+        <td class="Text">SUSE-SU-2013:1381-1 -- Security update for Apache2</td>
+      </tr>
+      <tr class="resultgoodA">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:25508">oval:org.mitre.oval:def:25508</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="https://www.suse.com/support/update/announcement/2014/suse-ru-20140170-1.html">SUSE-RU-2014:0170-1</a>]</td>
+        <td class="Text">SUSE-RU-2014:0170-1 -- Recommended update for apache2</td>
+      </tr>
+      <tr class="resultgoodB">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:25300">oval:org.mitre.oval:def:25300</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="https://www.suse.com/support/update/announcement/2013/suse-su-20131824-1.html">SUSE-SU-2013:1824-1</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2013-1896">CVE-2013-1896</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2013-1862">CVE-2013-1862</a>]</td>
+        <td class="Text">SUSE-SU-2013:1824-1 -- Security update for Apache2</td>
+      </tr>
+      <tr class="resultgoodA">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:24905">oval:org.mitre.oval:def:24905</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="https://www.suse.com/support/update/announcement/2014/suse-ru-20140172-1.html">SUSE-RU-2014:0172-1</a>]</td>
+        <td class="Text">SUSE-RU-2014:0172-1 -- Recommended update for apache2</td>
+      </tr>
+      <tr class="resultgoodB">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:23810">oval:org.mitre.oval:def:23810</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="http://www.ubuntu.com/usn/usn-2152-1/">USN-2152-1</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2013-6438">CVE-2013-6438</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-0098">CVE-2014-0098</a>]</td>
+        <td class="Text">USN-2152-1 -- apache2 vulnerabilities</td>
+      </tr>
+      <tr class="resultgoodA">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:20246">oval:org.mitre.oval:def:20246</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="http://www.debian.org/security/dsa-2202-1">DSA-2202-1</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2011-1176">CVE-2011-1176</a>]</td>
+        <td class="Text">DSA-2202-1 apache2 - failure to drop root privileges</td>
+      </tr>
+      <tr class="resultgoodB">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:20114">oval:org.mitre.oval:def:20114</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="http://www.debian.org/security/dsa-2452-1">DSA-2452-1</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2012-0216">CVE-2012-0216</a>]</td>
+        <td class="Text">DSA-2452-1 apache2 - insecure default configuration</td>
+      </tr>
+      <tr class="resultgoodA">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:19296">oval:org.mitre.oval:def:19296</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="http://www.debian.org/security/dsa-1834-1">DSA-1834-1</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2009-1890">CVE-2009-1890</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2009-1891">CVE-2009-1891</a>]</td>
+        <td class="Text">DSA-1834-1 apache2 apache2-mpm-itk - denial of service</td>
+      </tr>
+      <tr class="resultgoodB">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:18468">oval:org.mitre.oval:def:18468</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="http://www.debian.org/security/dsa-2579-1">DSA-2579-1</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2012-4557">CVE-2012-4557</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2012-4929">CVE-2012-4929</a>]</td>
+        <td class="Text">DSA-2579-1 apache2 - several</td>
+      </tr>
+      <tr class="resultgoodA">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:18274">oval:org.mitre.oval:def:18274</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="http://www.ubuntu.com/usn/usn-1903-1/">USN-1903-1</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2013-1862">CVE-2013-1862</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2013-1896">CVE-2013-1896</a>]</td>
+        <td class="Text">USN-1903-1 -- apache2 vulnerabilities</td>
+      </tr>
+      <tr class="resultgoodB">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:18136">oval:org.mitre.oval:def:18136</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="http://www.ubuntu.com/usn/usn-1627-1/">USN-1627-1</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2012-2687">CVE-2012-2687</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2012-4929">CVE-2012-4929</a>]</td>
+        <td class="Text">USN-1627-1 -- apache2 vulnerabilities</td>
+      </tr>
+      <tr class="resultgoodA">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:18069">oval:org.mitre.oval:def:18069</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="http://www.debian.org/security/dsa-2637-1">DSA-2637-1</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2012-3499">CVE-2012-3499</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2012-4558">CVE-2012-4558</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2013-1048">CVE-2013-1048</a>]</td>
+        <td class="Text">DSA-2637-1 apache2 - several</td>
+      </tr>
+      <tr class="resultgoodB">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:18061">oval:org.mitre.oval:def:18061</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="http://www.ubuntu.com/usn/usn-1765-1/">USN-1765-1</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2012-3499">CVE-2012-3499</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2012-4558">CVE-2012-4558</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2012-4557">CVE-2012-4557</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2013-1048">CVE-2013-1048</a>]</td>
+        <td class="Text">USN-1765-1 -- apache2 vulnerabilities</td>
+      </tr>
+      <tr class="resultgoodA">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:17676">oval:org.mitre.oval:def:17676</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="http://www.ubuntu.com/usn/usn-575-1/">USN-575-1</a>]</td>
+        <td class="Text">DEPRECATED: USN-575-1 -- apache2 vulnerabilities</td>
+      </tr>
+      <tr class="resultgoodB">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:17648">oval:org.mitre.oval:def:17648</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="http://www.ubuntu.com/usn/usn-575-1/">USN-575-1</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2006-3918">CVE-2006-3918</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2007-3847">CVE-2007-3847</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2007-4465">CVE-2007-4465</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2007-5000">CVE-2007-5000</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2007-6388">CVE-2007-6388</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2007-6421">CVE-2007-6421</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2007-6422">CVE-2007-6422</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2008-0005">CVE-2008-0005</a>]</td>
+        <td class="Text">USN-575-1 -- apache2 vulnerabilities</td>
+      </tr>
+      <tr class="resultgoodA">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:15373">oval:org.mitre.oval:def:15373</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="http://lists.debian.org/debian-security-announce/2012/msg00031.html">DSA-2405-1</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2011-3607">CVE-2011-3607</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2011-3368">CVE-2011-3368</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2011-3639">CVE-2011-3639</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2011-4317">CVE-2011-4317</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2012-0031">CVE-2012-0031</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2012-0053">CVE-2012-0053</a>]</td>
+        <td class="Text">DSA-2405-1 apache2 -- multiple issues</td>
+      </tr>
+      <tr class="resultgoodB">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:15145">oval:org.mitre.oval:def:15145</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="http://lists.debian.org/debian-security-announce/2011/msg00172.html">DSA-2298-1</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2010-1452">CVE-2010-1452</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2011-3192">CVE-2011-3192</a>]</td>
+        <td class="Text">DSA-2298-1 apache2 -- denial of service</td>
+      </tr>
+      <tr class="resultgoodA">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:15135">oval:org.mitre.oval:def:15135</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="http://lists.debian.org/debian-security-announce/2011/msg00175.html">DSA-2298-2</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2010-1452">CVE-2010-1452</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2011-3192">CVE-2011-3192</a>]</td>
+        <td class="Text">DSA-2298-2 apache2 -- denial of service</td>
+      </tr>
+      <tr class="resultgoodB">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:13835">oval:org.mitre.oval:def:13835</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="https://lists.ubuntu.com/archives/ubuntu-security-announce/2009-March/000862.html">USN-731-1</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2007-6203">CVE-2007-6203</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2007-6420">CVE-2007-6420</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2008-1678">CVE-2008-1678</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2008-2168">CVE-2008-2168</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2008-2364">CVE-2008-2364</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2008-2939">CVE-2008-2939</a>]</td>
+        <td class="Text">USN-731-1 -- apache2 vulnerabilities</td>
+      </tr>
+      <tr class="resultgoodA">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:13834">oval:org.mitre.oval:def:13834</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="https://lists.ubuntu.com/archives/ubuntu-security-announce/2009-August/000952.html">USN-813-2</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2009-2412">CVE-2009-2412</a>]</td>
+        <td class="Text">USN-813-2 -- apache2 vulnerability</td>
+      </tr>
+      <tr class="resultgoodB">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:13813">oval:org.mitre.oval:def:13813</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="https://lists.ubuntu.com/archives/ubuntu-security-announce/2009-June/000921.html">USN-787-1</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2009-0023">CVE-2009-0023</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2009-1191">CVE-2009-1191</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2009-1195">CVE-2009-1195</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2009-1955">CVE-2009-1955</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2009-1956">CVE-2009-1956</a>]</td>
+        <td class="Text">USN-787-1 -- apache2 vulnerabilities</td>
+      </tr>
+      <tr class="resultgoodA">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:13769">oval:org.mitre.oval:def:13769</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="http://lists.debian.org/debian-security-announce/2009/msg00163.html">DSA-1834-2</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2009-1890">CVE-2009-1890</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2009-1891">CVE-2009-1891</a>]</td>
+        <td class="Text">DSA-1834-2 apache2 -- denial of service</td>
+      </tr>
+      <tr class="resultgoodB">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:13764">oval:org.mitre.oval:def:13764</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="http://lists.debian.org/debian-security-announce/2009/msg00128.html">DSA-1816-1</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2009-1195">CVE-2009-1195</a>]</td>
+        <td class="Text">DSA-1816-1 apache2 -- insufficient security check</td>
+      </tr>
+      <tr class="resultgoodA">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:13643">oval:org.mitre.oval:def:13643</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="https://lists.ubuntu.com/archives/ubuntu-security-announce/2009-August/000959.html">USN-802-2</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2009-1891">CVE-2009-1891</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2009-1890">CVE-2009-1890</a>]</td>
+        <td class="Text">USN-802-2 -- apache2 regression</td>
+      </tr>
+      <tr class="resultgoodB">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:13623">oval:org.mitre.oval:def:13623</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="http://lists.debian.org/debian-security-announce/2009/msg00257.html">DSA-1934-1</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2009-3094">CVE-2009-3094</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2009-3095">CVE-2009-3095</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2009-3555">CVE-2009-3555</a>]</td>
+        <td class="Text">DSA-1934-1 apache2 -- multiple issues</td>
+      </tr>
+      <tr class="resultgoodA">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:13529">oval:org.mitre.oval:def:13529</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="https://lists.ubuntu.com/archives/ubuntu-security-announce/2010-September/001180.html">USN-990-2</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2009-3555">CVE-2009-3555</a>]</td>
+        <td class="Text">USN-990-2 -- apache2 vulnerability</td>
+      </tr>
+      <tr class="resultgoodB">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:13296">oval:org.mitre.oval:def:13296</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="https://lists.ubuntu.com/archives/ubuntu-security-announce/2009-November/001016.html">USN-860-1</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2009-3555">CVE-2009-3555</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2009-3094">CVE-2009-3094</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2009-3095">CVE-2009-3095</a>]</td>
+        <td class="Text">USN-860-1 -- apache2 vulnerabilities</td>
+      </tr>
+      <tr class="resultgoodA">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:13227">oval:org.mitre.oval:def:13227</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="http://lists.debian.org/debian-security-announce/2010/msg00075.html">DSA-2035-1</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2010-0408">CVE-2010-0408</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2010-0434">CVE-2010-0434</a>]</td>
+        <td class="Text">DSA-2035-1 apache2 -- multiple issues</td>
+      </tr>
+      <tr class="resultgoodB">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:13185">oval:org.mitre.oval:def:13185</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="https://lists.ubuntu.com/archives/ubuntu-security-announce/2009-July/000937.html">USN-802-1</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2009-1890">CVE-2009-1890</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2009-1891">CVE-2009-1891</a>]</td>
+        <td class="Text">USN-802-1 -- apache2 vulnerabilities</td>
+      </tr>
+      <tr class="resultgoodA">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:13162">oval:org.mitre.oval:def:13162</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="https://lists.ubuntu.com/archives/ubuntu-security-announce/2010-November/001217.html">USN-1021-1</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2010-1452">CVE-2010-1452</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2010-1623">CVE-2010-1623</a>]</td>
+        <td class="Text">USN-1021-1 -- apache2 vulnerabilities</td>
+      </tr>
+      <tr class="resultgoodB">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:13100">oval:org.mitre.oval:def:13100</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="https://lists.ubuntu.com/archives/ubuntu-security-announce/2010-March/001072.html">USN-908-1</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2010-0408">CVE-2010-0408</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2010-0434">CVE-2010-0434</a>]</td>
+        <td class="Text">USN-908-1 -- apache2 vulnerabilities</td>
+      </tr>
+      <tr class="resultgoodA">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:13078">oval:org.mitre.oval:def:13078</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="https://lists.ubuntu.com/archives/ubuntu-security-announce/2011-May/001347.html">USN-1134-1</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2011-0419">CVE-2011-0419</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2011-1928">CVE-2011-1928</a>]</td>
+        <td class="Text">USN-1134-1 -- apache2, apr vulnerabilities</td>
+      </tr>
+      <tr class="resultgoodB">
+        <td class="Text" align="center">
+          <a class="Hover" target="_blank" href="http://oval.mitre.org/repository/data/getDef?id=oval:org.mitre.oval:def:12573">oval:org.mitre.oval:def:12573</a>
+        </td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="http://lists.debian.org/debian-security-announce/2011/msg00003.html">DSA-2141-3</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2009-3555">CVE-2009-3555</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2010-4180">CVE-2010-4180</a>]</td>
+        <td class="Text">DSA-2141-3 apache2 -- backward compatibility option for SSL/TLS insecure</td>
+      </tr>
+      <tr class="resultgoodA">
+        <td class="Text" align="center">oval:org.cisecurity:def:964</td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="https://www.debian.org/security/dsa-3623">DSA-3623-1</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2016-5387">CVE-2016-5387</a>]</td>
+        <td class="Text">DSA-3623-1 -- apache2 -- security update</td>
+      </tr>
+      <tr class="resultgoodB">
+        <td class="Text" align="center">oval:org.cisecurity:def:4877</td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="https://www.debian.org/security/dsa-4164">DSA-4164-1</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-15710">CVE-2017-15710</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-15715">CVE-2017-15715</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-1283">CVE-2018-1283</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-1301">CVE-2018-1301</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-1303">CVE-2018-1303</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-1312">CVE-2018-1312</a>]</td>
+        <td class="Text">DSA-4164-1 -- apache2 -- security update</td>
+      </tr>
+      <tr class="resultgoodA">
+        <td class="Text" align="center">oval:org.cisecurity:def:3316</td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="https://www.debian.org/security/dsa-3980">DSA-3980-1</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-9798">CVE-2017-9798</a>]</td>
+        <td class="Text">DSA-3980-1 -- apache2 -- security update</td>
+      </tr>
+      <tr class="resultgoodB">
+        <td class="Text" align="center">oval:org.cisecurity:def:2789</td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="https://www.debian.org/security/dsa-3913">DSA-3913-1</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-9788">CVE-2017-9788</a>]</td>
+        <td class="Text">DSA-3913-1 -- apache2 -- security update</td>
+      </tr>
+      <tr class="resultgoodA">
+        <td class="Text" align="center">oval:org.cisecurity:def:2601</td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="https://www.debian.org/security/dsa-3896">DSA-3896-1</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-3167">CVE-2017-3167</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-3169">CVE-2017-3169</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-7659">CVE-2017-7659</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-7668">CVE-2017-7668</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-7679">CVE-2017-7679</a>]</td>
+        <td class="Text">DSA-3896-1 -- apache2 -- security update</td>
+      </tr>
+      <tr class="resultgoodB">
+        <td class="Text" align="center">oval:org.cisecurity:def:1933</td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="https://www.debian.org/security/dsa-3796">DSA-3796-1</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2016-0736">CVE-2016-0736</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2016-2161">CVE-2016-2161</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2016-8743">CVE-2016-8743</a>]</td>
+        <td class="Text">DSA-3796-1 -- apache2 -- security update</td>
+      </tr>
+      <tr class="resultgoodA">
+        <td class="Text" align="center">oval:org.cisecurity:def:183</td>
+        <td class="Text" align="center">false</td>
+        <td class="Text" align="center">patch</td>
+        <td class="Text" align="center">[<a class="Hover" target="_blank" href="http://www.debian.org/security/dsa-3325">DSA-3325-1</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2015-3183">CVE-2015-3183</a>], [<a class="Hover" target="_blank" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2015-3185">CVE-2015-3185</a>]</td>
+        <td class="Text">DSA-3325-1 -- apache2 -- security update</td>
+      </tr>
+    </table>
+  </body>
+</html>
