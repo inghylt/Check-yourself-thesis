@@ -1,0 +1,4 @@
+forbidden-modules:
+  - http_dav
+  - http_gzip
+  - http_autoindex
