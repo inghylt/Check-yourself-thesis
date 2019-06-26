@@ -2,3 +2,4 @@ forbidden-modules:
   - http_dav
   - http_gzip
   - http_autoindex
+weekly-log-rotation: 13
