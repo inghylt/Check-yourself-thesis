@@ -2,4 +2,12 @@ forbidden-modules:
   - http_dav
   - http_gzip
   - http_autoindex
-weekly-log-rotation: 13
+weekly-log-rotation: '13'
+
+memory-zone-name: 'ratelimit'
+
+memory-zone-value: '10m'
+
+requests-per-second-per-IP: '5'
+
+burst-limit: '10'
