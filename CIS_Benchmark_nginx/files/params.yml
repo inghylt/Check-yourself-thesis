@@ -11,3 +11,15 @@ memory-zone-value: '10m'
 requests-per-second-per-IP: '5'
 
 burst-limit: '10'
+
+top-level-domain-name: 'example.org'
+
+
+#TAKE CATION if preload-check is 'true', a GET request will be sent to https://hstspreload.org/ with the specifed top-level-domain-name
+#This will submit the domain to the HSTS preload list 
+#Preloading should only be done with careful consideration as the website and all its subdomains will be forced over HTTPS. 
+#If your website or any of its subdomains are not able to support preloading, you should not preload your site. Preloading should be opt-in
+#only, and if done, may impact more sites than the nginx instance you are working on.
+#Removing preloading can be slow and painful, and should only be done with careful
+#consideration according to https://hstspreload.org.
+preload-check: 'false'

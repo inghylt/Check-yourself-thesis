@@ -1,12 +1,14 @@
 nginx_params = yaml(content: inspec.profile.file('params.yml')).params
 
 forbidden_modules = nginx_params['forbidden-modules']
-
 weekly_log_rotation = nginx_params['weekly-log-rotation']
 memory_zone_name = nginx_params['memory-zone-name']
 memory_zone_value = nginx_params['memory-zone-value']
 request_per_second_per_IP = nginx_params['requests-per-second-per-IP']
 burst_limit = nginx_params['burst-limit']
+top_level_domain_name = nginx_params['top-level-domain-name']
+preload_check = nginx_params['preload-check']
+
 
 if os.debian?
   package_info_command = 'apt show nginx'
@@ -73,7 +75,7 @@ vulnerabilities, such as the execution of malicious code.'
   end
 
   control 'Verify That Nginx Use a Non-Privileged and Dedicated Service Account' do
-    impact 1.0
+    impact 0.5
     title '2.2.1 Ensure that NGINX is run using a non-privileged, dedicated service
   account'
     desc 'Running a web server under a non-privileged, dedicated service account helps mitigate the
@@ -221,7 +223,7 @@ vulnerabilities, such as the execution of malicious code.'
   end
 
   control'Verify Non-Existance of Directive or Existance of Correct Configuration' do
-    impact 1.0
+    impact 0.5
     title '2.3.4 Ensure the core dump directory is secured'
     desc 'Core dumps may contain sensitive information that should not be accessible by other
     accounts on the system.' 
@@ -253,7 +255,7 @@ vulnerabilities, such as the execution of malicious code.'
   end
 
   control 'Verify Existence of Directive and Verify Its Value' do
-    impact 0.5
+    impact 1.0
     title '3.3 Ensure error logging is enabled and set to the info logging level'
     desc "Error logging can be useful in identifying an attacker attempting to exploit a system and
   recreating an attacker's steps. Error logging also helps with identifying possible issues with
@@ -264,7 +266,7 @@ vulnerabilities, such as the execution of malicious code.'
   end
 
   control 'Verify Existence of Directive Inside a Context and Verify Its Value-01' do
-    impact 0.5
+    impact 1.0
     title '2.5.1 Ensure server_tokens directive is set to `off`'
     desc 'Attackers can conduct reconnaissance on a website using these response headers, then
 target attacks for specific known vulnerabilities associated with the underlying
@@ -274,18 +276,28 @@ technologies. Hiding the version will slow down and deter some potential attacke
     end
   end
 
-#   control 'Verify Existence of Directive Inside a Context and Verify Its Value-02' do
-#     title '2.5.3 Ensure hidden file serving is disabled'
-#     desc 'Disabling hidden files prevents an attacker from being able to reference a hidden file that
-# may be put in your location and have sensitive information, like .git files.'
-#     locations_array = nginx_conf.locations
-#     describe locations_array.join(', ') do
-#       it { should include 'location' + ' "~/\\."' }
-#     end
-#   end
+  control 'Verify Existence of Directive Inside a Context and Verify Its Value-02' do
+    impact 0.5
+    title '2.5.3 Ensure hidden file serving is disabled'
+    desc 'Disabling hidden files prevents an attacker from being able to reference a hidden file that
+    may be put in your location and have sensitive information, like .git files.'
+    locations_array = nginx_conf.locations
 
+    describe locations_array.join(',') do
+       it { should include '~ /\\\\.'} 
+    end
 
-
+    if locations_array.join(',').include?('~ /\\\\.')
+      locations_array.each do |element|
+        if element.params.values.flatten.include?("/\\.")
+          describe element.params do
+            it { should include "deny"=>[["all"]] }
+            it { should include "return"=>[["404"]] }
+          end
+        end
+      end
+    end
+  end
 
 
   control 'Verify Existence of Directive Inside a Context and Verify Correct Configuration of the Value' do
@@ -316,6 +328,7 @@ technologies. Hiding the version will slow down and deter some potential attacke
     end
 
   control 'Verify Existence of Directives and Nested Directivies Inside a Context and Verify Their Values' do
+      impact 0.5
       title '5.2.5 Ensure rate limits by IP address are set'
       desc 'Rate limiting allows you to mitigate potential denial of service attacks as a defense in depth
   mechanism.'
@@ -383,6 +396,28 @@ technologies. Hiding the version will slow down and deter some potential attacke
       its('content') { should include 'rotate ' + weekly_log_rotation }
     end
   end
+
+  control 'Verify Correct Configuration by Visiting Web Page and Later Verify Existance of Directives' do
+    impact 0.5
+    title '4.1.12 Ensure your domain is preloaded'
+    desc 'Preloading your domain helps prevent HTTP downgrade attacks and increases trust. Note: Preloading should only be done with careful consideration!'
+    desc 'Your website and all its subdomains will be forced over HTTPS. If your website or any of its subdomains are not able to support preloading, 
+    you should not preload your site. Preloading should be opt-in nly, and if done, may impact more sites than the nginx instance you are working on.
+    Removing preloading can be slow and painful, and should only be done with careful consideration according to https://hstspreload.org.'
+
+    if preload_check=='true'
+      preload_status_response_array = command('curl https://hstspreload.org/api/v2/status?domain=' + top_level_domain_name).stdout.split(',')
+      status_value_separated_array = preload_status_response_array[1].split(': ')
+      describe status_value_separated_array[1] do
+        it { should include "preloaded" }
+      end
+    end
+  end
+
+  
+
+  
+
 
   #nginx_option_V_pid = command('nginx -V').stdout.split.keep_if { |result| result.include?("pid") }
   # control 'verify non-existence of working_directory' do
