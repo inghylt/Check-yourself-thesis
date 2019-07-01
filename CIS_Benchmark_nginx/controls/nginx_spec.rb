@@ -13,11 +13,13 @@ preload_check = nginx_params['preload-check']
 if os.debian?
   package_info_command = 'apt show nginx'
   index_distance = 1
+  version_string = 'Version:'
 end
 
 if os.redhat?
   package_info_command = 'yum info nginx'
   index_distance = 2
+  version_string = 'Version'
 end
 
 nginx_parsed_config = command('nginx -T').stdout
@@ -53,14 +55,15 @@ if nginx.version.to_i > 0
     title '1.2.2 Ensure the latest software package is installed'
     desc 'Up-to-date software provides the best possible protection against exploitation of security
 vulnerabilities, such as the execution of malicious code.'
-      result_array = command(package_info_command).stdout.split
-      index_of_version_string = result_array.find_index("Version:").to_i
-      index_of_version_number = index_of_version_string + index_distance
-      version = result_array[index_of_version_number]
-      version_number = version.split('-')[0]
-      describe nginx.version do
-        it { should cmp version_number}
-      end
+        result_array = command(package_info_command).stdout.split
+        index_of_version_string = result_array.find_index(version_string).to_i
+        index_of_version_number = index_of_version_string + index_distance
+        version = result_array[index_of_version_number]
+        version_number = version.split('-')[0]
+        describe nginx.version do
+          it { should cmp version_number }
+        end
+      
   end
 
   control 'Verify Non-Existance of Module' do                        
@@ -227,29 +230,53 @@ vulnerabilities, such as the execution of malicious code.'
     title '2.3.4 Ensure the core dump directory is secured'
     desc 'Core dumps may contain sensitive information that should not be accessible by other
     accounts on the system.' 
-    describe.one do
-      describe nginx_conf.params do
-        it { should_not include "working_directory" }
+    describe nginx_conf.params do
+      it { should_not include 'working_directory' }
+    end
+
+    if nginx_conf.params.has_key?('working_directory') and nginx_conf.params.include?('user')
+
+      working_directory_location = nginx_conf.params.fetch('working_directory').flatten[0]
+
+      root_path_array = []
+
+      #Get potential root paths in http context
+      if nginx_conf.params.fetch('http')[0].include?('root')
+        root_path_array.push(nginx_conf.params.fetch('http')[0].fetch("root").flatten[0])
+      end
+      #Get potential root paths in server context
+      nginx_conf.servers.each do |element|
+        if element.params.include?('root')
+          root_path_array.push(element.params.fetch('root').flatten[0])
+        end
       end
 
-      if nginx_conf.params.has_key?("working_directory") and nginx_conf.params.include?("user")
-
-        working_directory_location = nginx_conf.params.fetch("working_directory").flatten[0]
-
-        nginx_user_groups = command('groups ' + nginx_user).stdout.split.uniq
-
-        #remove colon to only keep groups
-        index_of_element_to_remove = nginx_user_groups.index(":")
-        nginx_user_groups.delete_at(index_of_element_to_remove)
-        nginx_user_groups_string = nginx_user_groups.join(', ')
-
-        describe file(working_directory_location) do
-          its('owner') { should eq 'root'}
-          its('group') { should be_in nginx_user_groups_string }
-          it { should_not be_readable.by('others') }
-          it { should_not be_writable.by('others') }
-          it { should_not be_executable.by('others') }
+      #Get potential root paths in location context
+      nginx_conf.locations.each do |element|
+        if element.params.include?('root')
+          root_path_array.push(element.params.fetch('root').flatten[0])
         end
+      end
+
+      nginx_user_groups = command('groups ' + nginx_user).stdout.split.uniq
+
+      #remove colon to only keep groups
+      index_of_element_to_remove = nginx_user_groups.index(":")
+      nginx_user_groups.delete_at(index_of_element_to_remove)
+      nginx_user_groups_string = nginx_user_groups.join(', ')
+
+      root_path_array.each do |path|
+        describe file(working_directory_location) do
+          its('path') { should_not include path}
+        end
+      end
+        
+      describe file(working_directory_location) do
+        its('owner') { should eq 'root' }
+        its('group') { should be_in nginx_user_groups_string }
+        it { should_not be_readable.by('others') }
+        it { should_not be_writable.by('others') }
+        it { should_not be_executable.by('others') }
       end
     end
   end
@@ -414,17 +441,12 @@ technologies. Hiding the version will slow down and deter some potential attacke
     end
   end
 
-  
 
-  
-
-
-  #nginx_option_V_pid = command('nginx -V').stdout.split.keep_if { |result| result.include?("pid") }
-  # control 'verify non-existence of working_directory' do
-
-  
 end
 
+
+#nginx_option_V_pid = command('nginx -V').stdout.split.keep_if { |result| result.include?("pid") }
+  # control 'verify non-existence of working_directory' do
 
 #   #describe.one do
 #     describe nginx_conf.params do
