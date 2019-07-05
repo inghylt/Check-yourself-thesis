@@ -66,7 +66,7 @@ vulnerabilities, such as the execution of malicious code.'
       
   end
 
-  control 'Verify Non-Existance of Module' do                        
+  control 'Verify Non-Existence of Module' do                        
     impact 1.0                                
     title 'Benchmark 2.1.1, 2.1.2, 2.1.3, 2.1.4'
     desc 'These modules should not be installed, see CIS NGINX Benchmark Chapter 2 for more information'
@@ -104,6 +104,7 @@ vulnerabilities, such as the execution of malicious code.'
       nginx_user_groups.delete_at(index_of_colon)
       nginx_user_groups_string = nginx_user_groups.join(', ')
 
+      #assuming that it the user should not belong to any other groups than the primary group
       describe nginx_user_groups_string do
         it { should cmp nginx_user }
       end
@@ -225,7 +226,7 @@ vulnerabilities, such as the execution of malicious code.'
     end
   end
 
-  control'Verify Non-Existance of Directive or Existance of Correct Configuration' do
+  control'Verify Non-Existence of Directive or Existence of Correct Configuration' do
     impact 0.5
     title '2.3.4 Ensure the core dump directory is secured'
     desc 'Core dumps may contain sensitive information that should not be accessible by other
@@ -424,7 +425,7 @@ technologies. Hiding the version will slow down and deter some potential attacke
     end
   end
 
-  control 'Verify Correct Configuration by Visiting Web Page and Later Verify Existance of Directives' do
+  control 'Verify Correct Configuration by Visiting Web Page and Later Verify Existence of Directives' do
     impact 0.5
     title '4.1.12 Ensure your domain is preloaded'
     desc 'Preloading your domain helps prevent HTTP downgrade attacks and increases trust. Note: Preloading should only be done with careful consideration!'
