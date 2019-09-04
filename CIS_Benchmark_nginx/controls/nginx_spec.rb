@@ -8,8 +8,10 @@ request_per_second_per_IP = nginx_params['requests-per-second-per-IP']
 burst_limit = nginx_params['burst-limit']
 top_level_domain_name = nginx_params['top-level-domain-name']
 preload_check = nginx_params['preload-check']
+hardcoded_boo_boos = nginx_params['hardcoded-boo-boos']
 
 
+#example of how the code can be adapted to suit a variety of operating systems
 if os.debian?
   package_info_command = 'apt show nginx'
   index_distance = 1
@@ -55,27 +57,34 @@ if nginx.version.to_i > 0
     title '1.2.2 Ensure the latest software package is installed'
     desc 'Up-to-date software provides the best possible protection against exploitation of security
 vulnerabilities, such as the execution of malicious code.'
+        #Obtaining the latest version number available
         result_array = command(package_info_command).stdout.split
         index_of_version_string = result_array.find_index(version_string).to_i
         index_of_version_number = index_of_version_string + index_distance
         version = result_array[index_of_version_number]
         version_number = version.split('-')[0]
+
+        #Comparing the current number with the latest
         describe nginx.version do
           it { should cmp version_number }
         end
       
   end
 
+
+
   control 'Verify Non-Existence of Module' do                        
     impact 1.0                                
     title 'Benchmark 2.1.1, 2.1.2, 2.1.3, 2.1.4'
     desc 'These modules should not be installed, see CIS NGINX Benchmark Chapter 2 for more information'
     describe nginx do
-      forbidden_modules.each do |forbidden_module|           # The actual test
+      forbidden_modules.each do |forbidden_module|           
       	its ('modules') { should_not include forbidden_module }
     	end
     end
   end
+
+
 
   control 'Verify That Nginx Use a Non-Privileged and Dedicated Service Account' do
     impact 0.5
@@ -111,7 +120,9 @@ vulnerabilities, such as the execution of malicious code.'
     end
   end
 
-  control '2.2.2 Ensure the NGINX service account is locked (Scored)' do 
+
+
+  control 'Verify That the Nginx Service Account Is Locked' do 
     impact 1.0
     title '2.2.2 Ensure the NGINX service account is locked'
     desc "As a defense-in-depth measure, the nginx user account should be locked to prevent logins
@@ -135,6 +146,8 @@ vulnerabilities, such as the execution of malicious code.'
       end
   end
 
+
+
   control 'Verify that the NGINX Service Account Has an Invalid Shell' do
   impact 1.0
   title '2.2.3 Ensure the NGINX service account has an invalid shell (Scored)'
@@ -153,7 +166,9 @@ vulnerabilities, such as the execution of malicious code.'
     end
   end
 
-  control 'Verify Ownership' do
+
+
+  control 'Verify Correct Ownership' do
   	impact 1.0
   	title '2.3.1 Ensure NGINX directories and files are owned by root'
   	desc 'Setting ownership to only those users in the root group and the root user will reduce the likelihood of unauthorized modifications to the nginx configuration files, see CIS NGINX Benchmark 2.3.1 for more information'
@@ -167,7 +182,9 @@ vulnerabilities, such as the execution of malicious code.'
     end
   end
 
-  control 'Verify Permission' do 
+
+
+  control 'Verify Correct Permission' do 
     impact 1.0
     title '2.3.2 Ensure access to NGINX directories and files is restricted'
     desc 'Permissions on the /etc/nginx directory should enforce the principle of least privilege'
@@ -202,6 +219,8 @@ vulnerabilities, such as the execution of malicious code.'
     end
   end
 
+
+
   control 'Verify That the Nginx Process ID (PID) File Is Secured' do
     impact 1.0
     title '2.3.3 Ensure the NGINX process ID (PID) file is secured (Scored)'
@@ -225,6 +244,8 @@ vulnerabilities, such as the execution of malicious code.'
       it { should_not be_executable.by('others') }
     end
   end
+
+
 
   control'Verify Non-Existence of Directive or Existence of Correct Configuration' do
     impact 0.5
@@ -282,6 +303,20 @@ vulnerabilities, such as the execution of malicious code.'
     end
   end
 
+  control 'Verify Non-Existence of Directive or Text' do
+    impact 1.0
+    title 'OWASP-12, Check If Password or Encryption Keys Is Hardcoded In The Source Code or Configuration Files'
+    desc 'Passwords and keys should not be stored in configuration files as this might lead to their unintended exposure'
+    
+    hardcoded_boo_boos.each do |boo|
+      describe command("grep -R '" + boo + "' /etc/nginx/").stdout do
+        it { should_not include boo }
+      end
+    end
+  end
+
+
+
   control 'Verify Existence of Directive and Verify Its Value' do
     impact 1.0
     title '3.3 Ensure error logging is enabled and set to the info logging level'
@@ -293,6 +328,8 @@ vulnerabilities, such as the execution of malicious code.'
     end
   end
 
+
+
   control 'Verify Existence of Directive Inside a Context and Verify Its Value-01' do
     impact 1.0
     title '2.5.1 Ensure server_tokens directive is set to `off`'
@@ -303,6 +340,8 @@ technologies. Hiding the version will slow down and deter some potential attacke
       it { should cmp 'off' }
     end
   end
+
+
 
   control 'Verify Existence of Directive Inside a Context and Verify Its Value-02' do
     impact 0.5
@@ -326,6 +365,7 @@ technologies. Hiding the version will slow down and deter some potential attacke
       end
     end
   end
+
 
 
   control 'Verify Existence of Directive Inside a Context and Verify Correct Configuration of the Value' do
@@ -355,6 +395,8 @@ technologies. Hiding the version will slow down and deter some potential attacke
       end
     end
 
+
+
   control 'Verify Existence of Directives and Nested Directivies Inside a Context and Verify Their Values' do
       impact 0.5
       title '5.2.5 Ensure rate limits by IP address are set'
@@ -377,6 +419,8 @@ technologies. Hiding the version will slow down and deter some potential attacke
       end
     end
 
+
+
   control 'Ensure Directive and Verify That Its Value Is Lower/Higher than Threshold' do
     impact 1.0
     title '2.4.3 Ensure keepalive_timeout is 10 seconds or less, but not 0'
@@ -389,9 +433,8 @@ technologies. Hiding the version will slow down and deter some potential attacke
   end
 
 
-  
 
-  control 'Disable Default Content' do
+  control 'Verify That Default Content Is Disabled' do
     impact 1.0
     title 'CIS 2.5.2 Ensure default error and index.html pages do not reference NGINX'
     desc 'By gathering information about the server, attackers can target attacks against its known
@@ -425,7 +468,9 @@ technologies. Hiding the version will slow down and deter some potential attacke
     end
   end
 
-  control 'Verify Correct Configuration by Visiting Web Page and Later Verify Existence of Directives' do
+
+
+  control 'Verify Correct Configuration Through HTTP Request' do
     impact 0.5
     title '4.1.12 Ensure your domain is preloaded'
     desc 'Preloading your domain helps prevent HTTP downgrade attacks and increases trust. Note: Preloading should only be done with careful consideration!'
@@ -443,77 +488,10 @@ technologies. Hiding the version will slow down and deter some potential attacke
   end
 
 
+
+  
+  
 end
-
-
-#nginx_option_V_pid = command('nginx -V').stdout.split.keep_if { |result| result.include?("pid") }
-  # control 'verify non-existence of working_directory' do
-
-#   #describe.one do
-#     describe nginx_conf.params do
-#       it { should_not include "working_directory" }
-#     end
-# end
-
-# control 'verify correct setting on working_directory file' do 
-#   if nginx_conf.params.has_key?("working_directory")
-
-#     working_directory_location = nginx_conf.params.fetch("working_directory").flatten[0]
-
-#     nginx_user = nginx_conf.params.fetch("user").flatten[0]
-
-#     nginx_user_groups = command('groups ' + nginx_user).stdout.split.uniq
-#     index_of_element_to_remove = nginx_user_groups.index(":")
-#     nginx_user_groups.delete_at(index_of_element_to_remove)
-#     nginx_user_groups_string = nginx_user_groups.join(', ')
-
-#     describe file(working_directory_location) do
-#       its('owner') { should eq 'root'}
-#       its('group') { should be_in nginx_user_groups_string }
-#       it { should_not be_readable.by('others') }
-#       it { should_not be_writable.by('others') }
-#       it { should_not be_executable.by('others') }
-#     end
-#   end  
-    # describe ConfigurationB do
-    #   its('setting_2') { should eq true }
-    # end
-  #end
-#end
-
-
-
- 
-
-
-
-# control 'non-existence or correct configuration' do
-#   impact 1.0
-#   title 'test'
-#   desc 'test'
-#   describe file('/etc/nginx/nginx.conf') do
-#     its('content') {should_not match 'http'}
-#   end
-# end
-
-# control 'Ensure Directive and Verify Its Value' do
-#   impact 1.0
-#   title 'test'
-#   desc 'test'
-#   describe parse_config(nginx_parsed_config, options) do
-#     its('return') { should eq '404' }
-#     its('listen') { should eq '443' }
-#   end
-# end
-
-# control 'tes2' do
-#   impact 1.0
-#   title 'test'
-#   desc 'test'
-#   describe parse_config(nginx_parsed_config, options) do
-#     its('location /') { should include 'test' }
-#   end
-# end
 
 
 

@@ -3,6 +3,7 @@
 
 params = yaml(content: inspec.profile.file('params.yml')).params
 forbidden_modules = params['forbidden-modules']
+host_name = params['host-name']
 
 if os.debian?
   loaded_modules_command = 'apache2ctl -M'
@@ -170,6 +171,10 @@ control'Verify Non-Existence of Directive or Existence of Correct Configuration'
 			path_to_mutex = apache_conf.params.fetch('Mutex').inspect.split(':')[1].split[0]
 			
 			if path_to_mutex.include?('${')
+				#To make the envvars accessible in the terminal
+				# command('source /etc/apache2/envvars')
+
+				# path_to_mutex = command('echo ' + path_to_mutex).stdout
 				#Obtaining the lock file path stated in the envvars file
 				path_name=apache_conf.params.fetch('Mutex')[0].split('{')[1].split('}')[0]
 				envvars_array = file(File.join(apache_conf.conf_dir, 'envvars')).content.split
@@ -222,21 +227,82 @@ control 'Remove Default Content' do
 		it { should_not include 'index.html' }
 	end
 
-	describe command('ls /usr/share/doc/').stdout do
+	describe command('ls /usr/share/doc/ | grep apache2').stdout do
 		it { should_not include 'apache2-doc' }
 	end
 	
 
-	#if apache_conf.params.include?('<LocationMatch')
-	# keys_array = apache_conf.params.keys
-	# index = ''
-	# keys_array.each do |key|
-	# 	if key.include?("<LocationMatch")
-	# 		index = keys_array.index(key)
+	# if apache_conf.params.include?('<Location')
+	#  	keys_array = apache_conf.params.keys
+	# 	index_array = []
+	# 	keys_array.each do |key|
+	# 		if key.include?("<Location")
+	# 			index_array.push(keys_array.index(key))
+	# 		end
 	# 	end
-	# end
-		describe 
-	
-	 
+	# 	index_array.each do |index|
+
+	# 		describe index do
+	# 			it { should cmp< 100 }
+	# 		end
+	# 	end
+	# end 
+	describe apache_conf.content do
+		it { should_not include '<Location /server-status>' }
+		it { should_not include '<Location /server-info>'  }
+		it { should_not include '<Location /perl-status>' }
+	end 
 end
+
+control 'Remove Default CGI Content' do
+	impact 1.0
+	title '5.5 Remove Default CGI Content printenv'
+	desc 'CGI programs have a long history of security bugs and problems associated with improperly
+	accepting user-input. Since these programs are often targets of attackers, we need to make sure
+	that there are no unnecessary CGI programs that could potentially be used for malicious
+	purposes. Usually these programs are not written for production use and consequently little
+	thought was given to security in their development. The printenv script in particular will
+	disclose inappropriate information about the web server including directory paths and detailed
+	version and configuration information.'
+	conf_array = apache_conf.content.split
+	cgi_path_array =[]
+	conf_array.each do | element |
+		if element.eql? 'ScriptAlias' || element.eql? 'Script' 
+			index_of_element = conf_array.index(element)
+
+			#the directives have the syntax Directive [URL-path] file-path|directory-path
+			#if the URL Path includes cgi/bin
+			#then obation the file/directory-path
+			if conf_array[index_of_element + 1].include?('cgi-bin')
+				cgi_path_array.push(conf_array[index_of_element+ 2])
+			end
+		end
+	end
+
+	cgi_path_array.each do |path|
+		describe command('ls ' + path).stdout do
+			it { should_not include 'printenv' }
+		end
+	end
+end
+
+# control 'Verify Directive Exists on Server Level and Verify Its Value'
+# impact 1.0
+# title '5.12 Deny IP Address Based Requests' 
+# desc "A common malware propagation and automated network scanning technique is to use IP
+# addresses rather than host names for web requests, since it's much simpler to automate. By
+# denying IP based web requests, these automated techniques will be denied access to the website.
+# Of course, malicious web scanning techniques continue to evolve, and many are now using
+# hostnames, however denying access to the IP based requests is still a worthwhile defense."
+
+# conf_hash = apache_conf.params
+# describe conf_hash do
+# 	it { should include 'RewriteCond' }
+# end
+
+# 	if conf_hash.include?('RewriteCond')
+# 		describe conf_hash.fetch('RewriteCond').inspect do
+# 			it { should cmp "%{HTTP_HOST} !^" + host_name + "[NC]", "%{REQUEST_URI} !^/error [NC]"}
+
+
 

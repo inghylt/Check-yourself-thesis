@@ -12,4 +12,6 @@ forbidden-modules:
   - proxy_fdpass_module
   - mime_module
 
+host-name: 'www\.example\.com'
+
 weekly-log-rotation: '13'
