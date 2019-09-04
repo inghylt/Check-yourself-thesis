@@ -5,9 +5,16 @@ params = yaml(content: inspec.profile.file('params.yml')).params
 forbidden_modules = params['forbidden-modules']
 host_name = params['host-name']
 
+#Example of how the controls can be adapted to suit a variety of operating systems
 if os.debian?
   loaded_modules_command = 'apache2ctl -M'
   apache_name = 'apache2'
+  package_info_command = 'apt show apache2'
+  index_distance = 1
+  version_string = 'Version:'
+  version_string2 = 'version:'
+  log_file_location = '/etc/logrotate.d/apache2'
+  default_page_content = 'Default Page: It works'
 end
 
 #Obtaining the user
@@ -31,7 +38,8 @@ else user = ''
 end
 
 
-control 'Verify Existance of Module' do 
+
+control 'Verify That Module Is Enabled' do 
 	impact 1.0
 	title '7.1 Install mod_ssl and/or mod_nss'
 	desc "It is best to plan for SSL/TLS implementation from the beginning of any new web server. As
@@ -56,24 +64,24 @@ control 'Verify Existance of Module' do
 	end
 end
 
-control 'Disable modules' do
+control 'Verify That Module Is Disabled' do
 	impact 1.0
 	title '2.6 Disable Proxy Modules'
 	desc 'Proxy servers can act as an important security control when properly configured, however a
-secure proxy server is not within the scope of this benchmark. A web server should be primarily
-a web server or a proxy server but not both, for the same reasons that other multi-use servers are
-not recommended. Scanning for web servers that will also proxy requests is a very common
-attack, as proxy servers are useful for anonymizing attacks on other servers, or possibly proxying
-requests into an otherwise protected network.'
+	secure proxy server is not within the scope of this benchmark. A web server should be primarily
+	a web server or a proxy server but not both, for the same reasons that other multi-use servers are
+	not recommended. Scanning for web servers that will also proxy requests is a very common
+	attack, as proxy servers are useful for anonymizing attacks on other servers, or possibly proxying
+	requests into an otherwise protected network.'
 	loaded_modules = command(loaded_modules_command).stdout.split.inspect
 	describe loaded_modules do
-      forbidden_modules.each do |forbidden_module|           # The actual test
+      forbidden_modules.each do |forbidden_module|           
       	it{ should_not include forbidden_module }
     	end
 	end
 end
 
-control 'Run the Apache Web Server as a non-root user' do
+control 'Verify That Apache Web Server Run as a Non-Root User' do
 	impact 1.0
 	title '3.1 Run the Apache Web Server as a non-root user'
 	desc 'One of the best ways to reduce your exposure to attack when running a web server is to create a
@@ -113,11 +121,11 @@ control 'Run the Apache Web Server as a non-root user' do
 
 end
 
-control 'Give the Apache User Account an Invalid Shell' do
+control 'Verify That the Apache User Account Has an Invalid Shell' do
 	impact 1.0
 	title '3.2 Give the Apache User Account an Invalid Shell'
 	desc 'Service accounts such as the apache account represent a risk if they can be used to get a login
-shell to the system.'
+	shell to the system.'
 	etc_passwd_result = command('grep ' + user + ' /etc/passwd').stdout
 
 	describe.one do
@@ -131,9 +139,9 @@ shell to the system.'
 	end
 end
 
-control 'Lock the Apache User Account' do
+control 'Verify That the Apache User Account Is Locked' do
 	impact 1.0
-	title 'Lock the Apache User Account'
+	title '3.3 Lock the Apache User Account'
 	desc "As a defense-in-depth measure the Apache user account should be locked to prevent logins, and
 	to prevent a user from su'ing to apache using the password. In general, there shouldn't be a need
 	for anyone to have to su as apache , and when there is a need, then sudo should be used instead,
@@ -150,11 +158,37 @@ control 'Lock the Apache User Account' do
 	end
 end
 
+control 'Verify Correct Ownership' do
+	impact 1.0
+	title '3.4 Set Ownership on Apache Directories and Files'
+	desc 'Restricting ownership of the Apache files and directories will reduce the probability of
+	unauthorized modifications to those resources.'
+	apache_files_and_dir = command('find /etc/apache2 -print').stdout.split
+	  	apache_files_and_dir.each do |file|
+	    	describe file(file) do
+	    		its('owner') {should eq 'root'}
+	      end
+	    end
+ end
+
+control 'Verify Correct Permissions' do
+	impact 1.0
+	title '3.6 Restrict Other Write Access on Apache Directories and Files'
+	desc 'None of the Apache files and directories, including the Web document root must allow other
+	write access. Other write access is likely to be very useful for unauthorized modification of web
+	content, configuration files or software for malicious attacks.'
+	apache_files_and_dir = command('find /etc/apache2 -print').stdout.split
+	  	apache_files_and_dir.each do |file|
+	    	describe file(file) do
+	    		it { should_not be_writable.by('others') }
+	      	end
+	    end
+end
 
 control'Verify Non-Existence of Directive or Existence of Correct Configuration' do
-    impact 1.0
-    title '3.8 Secure the Lock File (Scored)'
-    desc 'If the lock file to be used as a mutex is placed in a writable directory, other accounts could create
+	impact 1.0
+	title '3.8 Secure the Lock File (Scored)'
+	desc 'If the lock file to be used as a mutex is placed in a writable directory, other accounts could create
 	a denial of service attack and prevent the server from starting by creating a lock file with the
 	same name.' 
 
@@ -171,10 +205,7 @@ control'Verify Non-Existence of Directive or Existence of Correct Configuration'
 			path_to_mutex = apache_conf.params.fetch('Mutex').inspect.split(':')[1].split[0]
 			
 			if path_to_mutex.include?('${')
-				#To make the envvars accessible in the terminal
-				# command('source /etc/apache2/envvars')
-
-				# path_to_mutex = command('echo ' + path_to_mutex).stdout
+				
 				#Obtaining the lock file path stated in the envvars file
 				path_name=apache_conf.params.fetch('Mutex')[0].split('{')[1].split('}')[0]
 				envvars_array = file(File.join(apache_conf.conf_dir, 'envvars')).content.split
@@ -184,36 +215,140 @@ control'Verify Non-Existence of Directive or Existence of Correct Configuration'
 						path_name_and_value = element
 					end
 				end
+				#Ignoring $SUFFIX as there is no way found to access this
 				path_to_mutex = path_name_and_value.split('=')[1].split('$')[0]
 			end
 
-			doc_root = apache_conf.params.fetch('DocumentRoot')[0]
+			doc_roots = apache_conf.params.fetch('DocumentRoot')
+			doc_roots.each do |docroot|
+				describe file(path_to_mutex) do
+		      		its('path') { should_not include docroot}
+		      		its ('owner') { should eq 'root' }
+		      		its ('group') { should eq 'root'}
+		      		it { should_not be_writable.by('group') }
+					it { should_not be_writable.by('others') }
+		    	end
+		    end
 
-			describe file(path_to_mutex) do
-          		its('path') { should_not include doc_root}
-          		its ('owner') { should eq 'root' }
-          		its ('group') { should eq 'root'}
-          		it { should_not be_writable.by('group') }
-    			it { should_not be_writable.by('others') }
-        	end
-
-        	describe command('mount').stdout do
-        		it { should_not include path_to_mutex }
-        	end
-        end
-    end
+	    	describe command('mount').stdout do
+	    		it { should_not include path_to_mutex }
+	    	end
+	    end
+	end
 end
 
-control 'Secure the PID file' do
+
+control 'Verify That the Apache Process ID (PID) File Is Secured' do
 	impact 1.0
 	title '3.9 Secure the Pid File'
 	desc 'If the PidFile is placed in a writable directory, other accounts could create a denial of service
 	attack and prevent the server from starting by creating a pid file with the same name.'
+	describe apache_conf.params do
+		it { should include 'PidFile' }
+	end
+
+	if apache_conf.params.include?('PidFile')
+		pid_path = apache_conf.params.fetch('PidFile')[0]
+		if pid_path.include?('${')
+			path_name=apache_conf.params.fetch('PidFile')[0].split('{')[1].split('}')[0]
+				envvars_array = file(File.join(apache_conf.conf_dir, 'envvars')).content.split
+				path_name_and_value = ''
+				envvars_array.each do |element|
+					if element.include?(path_name)
+						path_name_and_value = element
+					end
+				end
+				#Ignoring $SUFFIX as there is no way found to access this
+				pid_path_temp = path_name_and_value.split('=')[1].split('$')
+				pid_path_ending = ''
+					if pid_path_temp[1].include?('SUFFIX/')
+						pid_path_ending = pid_path_temp[1].split('/')[1]
+					end
+				pid_file = file(File.join(pid_path_temp[0], pid_path_ending))
+		end
+
+		doc_roots = apache_conf.params.fetch('DocumentRoot')
+		doc_roots.each do |docroot|
+			describe pid_file do
+	      		its('path') { should_not include docroot}
+	      		its ('owner') { should eq 'root' }
+	      		its ('group') { should eq 'root'}
+	      		it { should_not be_writable.by('group') }
+				it { should_not be_writable.by('others') }
+	    	end
+	    end
+    end
 end
 
-control 'Remove Default Content' do
+control 'Find Directive, Verify Existance or Non-Existance of Nested Directive and Its Value & Verify Non-Existance of Directive or Text' do
+    impact 1.0
+    title '4.3 Restrict Override for the OS Root Directory'
+    desc "While the functionality of htaccess files is sometimes convenient, usage decentralizes the
+	access controls and increases the risk of configurations being changed or viewed inappropriately
+	by an unintended or rogue .htaccess file. Consider also that some of the more common
+	vulnerabilities in web servers and web applications allow the web files to be viewed or to be
+	modified, then it is wise to keep the configuration out of the web server from being placed in
+	.htaccess files."
+    describe apache_conf.content do
+    	it { should include "<Directory />" }
+    end
+
+    if apache_conf.content.include?("<Directory />")
+
+    	splitted_content = apache_conf.content.split
+    	index_dir_content_beginning = 0
+    	splitted_content.each_cons(2) do |first, second|
+    		if first =='<Directory' && second=='/>'
+    			index_dir_content_beginning = splitted_content.index(second)
+    		end
+    	end
+
+    	#Obtaining the content inside the root directory
+    	index_dir_content_end = index_dir_content_beginning
+    	while index_dir_content_end < splitted_content.size 
+    		if splitted_content[index_dir_content_end] == '</Directory>'
+    			break
+    		else
+    			index_dir_content_end +=1
+    		end
+    	end
+
+    	counter = index_dir_content_beginning
+    	dir_content = []
+    	while counter < index_dir_content_end 
+    		dir_content.push(splitted_content[counter])
+    		counter +=1
+    	end
+
+    	describe dir_content.inspect do
+    		it { should_not include 'AllowOverrideList' }
+    		it { should include "AllowOverride" }
+    	end
+
+    	index_of_AllowOverride = dir_content.index('AllowOverride')
+    	describe dir_content[index_of_AllowOverride +1] do
+    		it { should cmp "None" }
+    	end
+    end
+end
+
+control 'Verify Value of Directive' do
 	impact 1.0
-	title 'Remove Default HTML Content (Scored)'
+    title "8.2 Set ServerSignature to 'Off'"
+    desc "Server signatures are helpful when the server is acting as a proxy, since it helps the user
+distinguish errors from the proxy rather than the destination server, however in this context there
+is no need for the additional information and we want to limit leakage of unnecessary
+information."
+
+	describe apache_conf.content do 
+		it { should include 'ServerSignature Off' }
+	end
+
+end
+
+control 'Verify That Default Content Is Removed' do
+	impact 1.0
+	title '5.4 Remove Default HTML Content'
 	desc 'Historically these sample content and features have been remotely exploited and can provide
 	different levels of access to the server. In the Microsoft arena, Code Red exploited a problem
 	with the index service provided by the Internet Information Service. Usually these routines are
@@ -222,31 +357,18 @@ control 'Remove Default Content' do
 
 	
 
-	doc_root = apache_conf.params.fetch('DocumentRoot')[0]
-	describe command('ls ' + doc_root).stdout do
-		it { should_not include 'index.html' }
+	doc_roots = apache_conf.params.fetch('DocumentRoot')
+	doc_roots.each do |docroot|
+		describe command("grep -R '" + default_page_content + "' " + docroot).stdout do
+			it { should_not include 'Default Page: It works' }
+		end
 	end
+
 
 	describe command('ls /usr/share/doc/ | grep apache2').stdout do
 		it { should_not include 'apache2-doc' }
 	end
 	
-
-	# if apache_conf.params.include?('<Location')
-	#  	keys_array = apache_conf.params.keys
-	# 	index_array = []
-	# 	keys_array.each do |key|
-	# 		if key.include?("<Location")
-	# 			index_array.push(keys_array.index(key))
-	# 		end
-	# 	end
-	# 	index_array.each do |index|
-
-	# 		describe index do
-	# 			it { should cmp< 100 }
-	# 		end
-	# 	end
-	# end 
 	describe apache_conf.content do
 		it { should_not include '<Location /server-status>' }
 		it { should_not include '<Location /server-info>'  }
@@ -254,7 +376,7 @@ control 'Remove Default Content' do
 	end 
 end
 
-control 'Remove Default CGI Content' do
+control 'Verify That Default CGI Content Is Removed' do
 	impact 1.0
 	title '5.5 Remove Default CGI Content printenv'
 	desc 'CGI programs have a long history of security bugs and problems associated with improperly
@@ -267,7 +389,7 @@ control 'Remove Default CGI Content' do
 	conf_array = apache_conf.content.split
 	cgi_path_array =[]
 	conf_array.each do | element |
-		if element.eql? 'ScriptAlias' || element.eql? 'Script' 
+		if element == 'ScriptAlias' || element == 'Script' || element == 'ScriptAliasMatch'
 			index_of_element = conf_array.index(element)
 
 			#the directives have the syntax Directive [URL-path] file-path|directory-path
@@ -286,23 +408,137 @@ control 'Remove Default CGI Content' do
 	end
 end
 
-# control 'Verify Directive Exists on Server Level and Verify Its Value'
-# impact 1.0
-# title '5.12 Deny IP Address Based Requests' 
-# desc "A common malware propagation and automated network scanning technique is to use IP
-# addresses rather than host names for web requests, since it's much simpler to automate. By
-# denying IP based web requests, these automated techniques will be denied access to the website.
-# Of course, malicious web scanning techniques continue to evolve, and many are now using
-# hostnames, however denying access to the IP based requests is still a worthwhile defense."
+control 'Verify Directive Exists on Server Level and Verify Its Value' do
+	impact 1.0
+	title '5.12 Deny IP Address Based Requests' 
+	desc "A common malware propagation and automated network scanning technique is to use IP
+	addresses rather than host names for web requests, since it's much simpler to automate. By
+	denying IP based web requests, these automated techniques will be denied access to the website.
+	Of course, malicious web scanning techniques continue to evolve, and many are now using
+	hostnames, however denying access to the IP based requests is still a worthwhile defense."
 
-# conf_hash = apache_conf.params
-# describe conf_hash do
-# 	it { should include 'RewriteCond' }
-# end
+	conf_hash = apache_conf.params
+	describe conf_hash do
+		it { should include 'RewriteCond' }
+		it { should include 'RewriteRule' }
+	end
 
-# 	if conf_hash.include?('RewriteCond')
-# 		describe conf_hash.fetch('RewriteCond').inspect do
-# 			it { should cmp "%{HTTP_HOST} !^" + host_name + "[NC]", "%{REQUEST_URI} !^/error [NC]"}
+	if conf_hash.include?('RewriteCond')
+		describe conf_hash.fetch('RewriteCond').inspect do
+			it { should include "%{HTTP_HOST} !^" + host_name + " [NC]" }
+			it { should include "%{REQUEST_URI} !^/error [NC]" }
+		end
+	end
+
+	if conf_hash.include?('RewriteRule') 
+		describe conf_hash.fetch('RewriteRule') do
+			it { should cmp "^.(.*) - [L,F]" }
+		end
+	end
 
 
+end
 
+control 'Verify Correct Setting of Log Storage and Rotation' do
+	impact 1.0
+    title '6.4 Log Storage and Rotation'
+    desc "Keep in mind that the generation of logs is under a potential attacker's control. So, do not hold
+any Apache log files on the root partition of the OS. This could result in a denial of service
+against your web server host by filling up the root partition and causing the system to crash. For
+this reason, it is recommended that the log files should be stored on a dedicated partition.
+Likewise consider that attackers sometimes put information into your logs which is intended to
+attack your log collection or log analysis processing software. So, it is important that they are not
+vulnerable. Investigation of incidents often require access to several months or more of logs,
+which is why it is important to keep at least 3 months available. Two common log rotation
+utilities include rotatelogs(8) which is bundled with Apache, and logrotate(8) commonly
+bundled on Linux distributions are described in the remediation section."
+
+	
+	describe file(log_file_location) do 
+		its ('content') { should include 'missingok' }
+		its ('content') { should include 'notifempty' }
+		its ('content') { should include 'sharedscripts' }
+		its ('content') { should include 'postrotate' }
+		its ('content') { should include 'weekly' }
+		its ('content') { should include 'rotate 13' }
+	end
+
+end
+
+control 'Verify That Applicable Patches Are Applied' do
+    impact 1.0
+    title '6.5 Apply Applicable Patches'
+    desc "Obviously knowing about newly discovered vulnerabilities is only part of the solution; there
+	needs to be a process in place where patches are tested and installed. These patches fix diverse
+	problems, including security issues. It is recommended to use the Apache packages and updates
+	provided by the Linux platform vendor rather than building from source when possible, in order
+	to minimize the disruption and the work of keeping the software up-to-date."
+
+		#Obtain most resent version number
+        result_array = command(package_info_command).stdout.split
+        index_of_version_string = result_array.find_index(version_string).to_i
+        index_of_version_number = index_of_version_string + index_distance
+        version = result_array[index_of_version_number]
+        version_number = version.split('-')[0]
+
+        #Obtain current version number
+        recent_version_array = command('apache2 -v').stdout.split
+        index_of_version_string = recent_version_array.index(version_string2).to_i
+        recent_version = recent_version_array[index_of_version_string + index_distance]
+        recent_version_number = recent_version.split('/')[1]
+
+        describe recent_version_number do
+          it { should include version_number }
+        end
+      
+end
+
+
+control 'Verify That a Valid Trusted Certificate Is Installed' do
+    impact 1.0
+    title '7.2 Install a Valid Trusted Certificate'
+    desc "A digital certificate on your server automatically communicates your site's authenticity to
+	visitors' web browsers. If a trusted authority signs your certificate, it confirms for the visitor they
+	are actually communicating with you, and not with a fraudulent site stealing credit card numbers
+	or personal information."
+    conf_array = apache_conf.content.split
+    describe conf_array do
+    	it { should include 'SSLCertificateFile' }
+    	it { should include 'SSLCertificateKeyFile' }
+    	it { should include 'SSLCACertificateFile' }
+    end
+
+    if conf_array.include?('SSLCertificateFile') && conf_array.include?('SSLCACertificateFile')
+    	index_of_cert_file = conf_array.index('SSLCertificateFile')
+    	cert_file_path = conf_array[index_of_cert_file +1 ]
+    	index_of_ca_cert_file = conf_array.index('SSLCACertificateFile')
+    	ca_cert_file_path =  conf_array[index_of_ca_cert_file +1]
+    	
+    	describe command('openssl verify -CAfile ' + ca_cert_file_path + ' -purpose sslserver ' + cert_file_path).stdout.split do
+    		it { should_not include 'error' }
+    		it { should_not include 'Error' }
+    		it { should include 'OK' }
+    	end 
+
+    end
+
+
+end
+
+
+control 'Verify That a Default Hosted U2-0620 Application Web Page Is Displayed When a Requested Web Page Cannot Be Found' do
+	impact 1.0
+    title 'U2-0620'
+    desc "The goal is to completely control the web user's experience in navigating any portion of the web document root directories. 
+    Ensuring all web content directories have at least the equivalent of an index.html file is a significant factor to accomplish this end. 
+    Enumeration techniques, such as URL parameter manipulation, rely upon being able to obtain information about the Apache web server's directory structure 
+    by locating directories without default pages. In the scenario, the Apache web server will display to the user a listing of the files in the directory being accessed. 
+    By having a default hosted application web page, the anonymous web user will not obtain directory browsing information or an error message that reveals the server type and version."
+
+    docroot_path_array = apache_conf.params.fetch('DocumentRoot')
+	docroot_path_array.each do |path|
+		describe command('find ' + path + ' -type f -name index.html' ).stdout do
+			it { should include 'index.html'}
+		end
+	end
+end

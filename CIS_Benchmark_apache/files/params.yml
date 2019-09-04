@@ -10,8 +10,7 @@ forbidden-modules:
   - proxy_express_module
   - proxy_wstunnel_module
   - proxy_fdpass_module
-  - mime_module
 
-host-name: 'www\.example\.com'
+host-name: 'www\\.example\\.com'
 
 weekly-log-rotation: '13'
